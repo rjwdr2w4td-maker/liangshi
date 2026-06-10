@@ -29,12 +29,11 @@
       ]
     },
     "types": [
-      "node",
-      "express"
+      "node"
     ]
   },
   "include": [
     "src",
-    "api"
+    "shared"
   ]
 }
