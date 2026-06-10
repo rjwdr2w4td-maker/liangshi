@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "check": "tsc --noEmit",
-    "deploy": "npm run build && gh-pages -d dist"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "clsx": "^2.1.1",
