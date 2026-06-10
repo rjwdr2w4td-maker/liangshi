@@ -1,7 +1,3 @@
-/**
- * This is a API server
- */
-
 import express, {
   type Request,
   type Response,
@@ -22,11 +18,9 @@ import disasterRoutes from './routes/disaster.js'
 import policyRoutes from './routes/policies.js'
 import regionRoutes from './routes/regions.js'
 
-// for esm mode
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// load env
 dotenv.config()
 
 const app: express.Application = express()
@@ -35,9 +29,6 @@ app.use(cors())
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
-/**
- * API Routes
- */
 app.use('/api/auth', authRoutes)
 app.use('/api/entities', entityRoutes)
 app.use('/api/plots', plotRoutes)
@@ -49,9 +40,6 @@ app.use('/api/disaster', disasterRoutes)
 app.use('/api/policies', policyRoutes)
 app.use('/api/regions', regionRoutes)
 
-/**
- * health
- */
 app.use(
   '/api/health',
   (req: Request, res: Response, next: NextFunction): void => {
@@ -62,9 +50,18 @@ app.use(
   },
 )
 
-/**
- * error handler middleware
- */
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '../dist')
+  app.use(express.static(distPath))
+  app.get('*', (req: Request, res: Response) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(distPath, 'index.html'))
+    } else {
+      res.status(404).json({ success: false, error: 'API not found' })
+    }
+  })
+}
+
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({
     success: false,
@@ -72,9 +69,6 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   })
 })
 
-/**
- * 404 handler
- */
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,

@@ -1,8 +1,9 @@
 services:
   - type: web
-    name: liangshi-api
+    name: liangshi
     env: node
-    buildCommand: npm install
+    region: singapore
+    buildCommand: npm install && npm run build
     startCommand: npx tsx api/server.ts
     envVars:
       - key: NODE_ENV
@@ -12,8 +13,8 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: DATABASE_PATH
-        value: ./data/grain.db
+        value: /opt/render/project/data/grain.db
     disk:
       name: data
-      mountPath: /opt/render/project/src/data
+      mountPath: /opt/render/project/data
       sizeGB: 1
